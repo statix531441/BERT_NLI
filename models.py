@@ -1,11 +1,13 @@
 import torch
 import torch.nn as nn
 from torch.functional import F
-    
+
+bert_tokenizer = torch.hub.load('huggingface/pytorch-transformers', 'model', 'bert-base-uncased')
+
 class BERTCombinedModel(nn.Module):
     def __init__(self, opt):
         super().__init__()
-        self.bert = torch.hub.load('huggingface/pytorch-transformers', 'model', 'bert-base-uncased')
+        self.bert = bert_tokenizer
         self.linear = nn.Linear(768, 3)
 
     def forward(self, X):
@@ -21,7 +23,7 @@ class BERTCombinedModel(nn.Module):
 class BERTSeperateModel(nn.Module):
     def __init__(self, opt):
         super().__init__()
-        self.bert = torch.hub.load('huggingface/pytorch-transformers', 'model', 'bert-base-uncased')
+        self.bert = bert_tokenizer
         self.linear = nn.Linear(768 * 2, 3)
 
     def forward(self, X):
