@@ -100,6 +100,8 @@ if opt.model in ('BERTCombinedModel', 'BERTSeperateModel'):
 
 ### Initialize loss, optimizer and train history
 lossFn = nn.CrossEntropyLoss().to(device)
+
+## ❗optimizer takes the whole model parameters
 optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr)
 history = {
     "train_loss": [],

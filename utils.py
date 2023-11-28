@@ -93,7 +93,7 @@ def predict(model, test_loader):
             X = [x.to(device) for x in X] if isinstance(X, Iterable) else X.to(device)
             pred = model(X)
             y_test.extend(y.tolist())
-            y_pred.extend(F.softmax(pred, dim=1).argmax(axis=1).tolist())
+            y_pred.extend(F.softmax(pred, dim=1).argmax(axis=1).cpu().tolist())
             test_accuracy += torch.sum(F.softmax(pred, dim=1).argmax(axis=1) == y).item()
     test_accuracy /= len(test_loader.dataset)
     return y_pred, y_test, test_accuracy
