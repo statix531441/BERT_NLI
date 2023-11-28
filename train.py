@@ -28,8 +28,8 @@ print(device, " used for training")
 import argparse
 parser = argparse.ArgumentParser(description="Train a machine learning model")
 
-parser.add_argument("--dataset", type=str, default="LSTMDataset",  choices=["LSTMDataset", "BERTCombinedDataset", "BERTSeperateDataset"])
-parser.add_argument("--model", type=str, default="LSTM", choices=["LSTM", "BERTCombinedModel", "BERTSeperateModel"])
+parser.add_argument("--dataset", type=str, default="BERTCombinedDataset",  choices=["LSTMDataset", "BERTCombinedDataset", "BERTSeperateDataset"])
+parser.add_argument("--model", type=str, default="BERTCombinedModel", choices=["LSTM", "BERTCombinedModel", "BERTSeperateModel"])
 parser.add_argument("--finetune_bert_last_layer", default=False, action='store_true')
 
 parser.add_argument("--train_size", type=int, default=25000, help="Number of training epochs")
@@ -105,8 +105,17 @@ if opt.model in ('BERTCombinedModel', 'BERTSeperateModel'):
 ### Initialize loss, optimizer and train history
 lossFn = nn.CrossEntropyLoss().to(device)
 
-## ❗optimizer takes the whole model parameters
-optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr)
+
+if opt.model=='LSTM':
+    optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr)
+
+else:
+    optimizer = torch.optim.Adam(
+        [
+            {'params': model.linear.parameters()},
+            {'params': model.bert.pooler.parameters(), 'lr': 1e-3}
+        ], lr=opt.lr
+    )
 history = {
     "train_loss": [],
     "train_accuracy": [],
