@@ -1,2 +1,8 @@
 # BERT_NLI  
-By Sid, Sang, Megh
+CSE 842 - NLP Project
+By
+- Siddharth Ashok Unnithan
+- Sangeetha Suresh
+- Megha Viswanath
+
+## Project Description
