@@ -45,7 +45,7 @@ args = parser.parse_args()
 opt = Options(dataset=args.dataset, model=args.model, tag="")
 if opt.model == 'LSTM':
     opt.model_folder = f"models/{opt.model}" + f"_{opt.tag}"
-opt.model_folder = f"models/{opt.model}" + f"_{opt.tag}" + f"{'_finetune' if opt.finetune_bert_last_layer else ''}"
+opt.model_folder = f"models/{opt.model}" + f"{opt.tag}" + f"{'_finetune' if opt.finetune_bert_last_layer else ''}"
 os.makedirs(opt.model_folder, exist_ok=True)
 
 ### Update opt with changes, Initialize directories and save options
