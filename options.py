@@ -7,7 +7,7 @@ class Options:
         self.dataset = dataset
         self.model = model
         self.tag = tag
-        self.train_size = 10000
+        self.train_size = 25000
         self.test_size = 10000
 
         # Train and test options
