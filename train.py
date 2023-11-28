@@ -34,7 +34,6 @@ parser.add_argument("--finetune_bert_last_layer", default=False, action='store_t
 
 parser.add_argument("--train_size", type=int, default=20, help="Number of training epochs")
 parser.add_argument("--test_size", type=int, default=10, help="Number of training epochs")
-parser.add_argument("--learning_rate", type=float, default=1e-4, help="Learning rate for the optimizer")
 
 parser.add_argument("--epochs", type=int, default=100, help="Number of training epochs")
 parser.add_argument("--learning_rate", type=float, default=1e-4, help="Learning rate for the optimizer")
