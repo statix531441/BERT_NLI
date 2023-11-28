@@ -1,0 +1,4 @@
+# Force pull changes from github
+
+git fetch --all
+git reset --hard origin/main
