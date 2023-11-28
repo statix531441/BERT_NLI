@@ -32,17 +32,17 @@ parser.add_argument("--dataset", type=str, default="LSTMDataset",  choices=["LST
 parser.add_argument("--model", type=str, default="LSTM", choices=["LSTM", "BERTCombinedModel", "BERTSeperateModel"])
 parser.add_argument("--finetune_bert_last_layer", default=False, action='store_true')
 
-parser.add_argument("--train_size", type=int, default=15000, help="Number of training epochs")
-parser.add_argument("--test_size", type=int, default=5000, help="Number of training epochs")
+parser.add_argument("--train_size", type=int, default=25000, help="Number of training epochs")
+parser.add_argument("--test_size", type=int, default=10000, help="Number of training epochs")
 
-parser.add_argument("--batch_size", type=int, default=30, help="Number of training epochs")
+parser.add_argument("--batch_size", type=int, default=500, help="Number of training epochs")
 parser.add_argument("--epochs", type=int, default=100, help="Number of training epochs")
 parser.add_argument("--learning_rate", type=float, default=1e-4, help="Learning rate for the optimizer")
 
 args = parser.parse_args()
 
 ### Name and create model folder (Replace opt. with args. once argparse is implemented)
-opt = Options(dataset=args.dataset, model=args.model, tag="Test")
+opt = Options(dataset=args.dataset, model=args.model, tag="")
 if opt.model == 'LSTM':
     opt.model_folder = f"models/{opt.model}" + f"_{opt.tag}"
 opt.model_folder = f"models/{opt.model}" + f"_{opt.tag}" + f"{'_finetune' if opt.finetune_bert_last_layer else ''}"
