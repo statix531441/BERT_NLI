@@ -11,7 +11,7 @@ class Options:
         self.test_size = 10000
 
         # Train and test options
-        self.epochs = 50
+        self.epochs = 100
         self.batch_size = 50
         self.lr = 1e-4
         self.classes = 3
