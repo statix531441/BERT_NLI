@@ -19,7 +19,7 @@ class Options:
 
         # Folders
         self.data_folder = f"data/{self.train_size}_{self.test_size}"
-        self.model_folder = f"{tag}_" + f"models/{model}" + f"{'_finetune' if self.finetune_bert_last_layer else ''}"
+        self.model_folder = f"models/{model}" + f"_{tag}" + f"{'_finetune' if self.finetune_bert_last_layer else ''}"
 
         # Activate Dataset Options
         if dataset == 'BERTCombinedDataset':

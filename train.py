@@ -25,23 +25,33 @@ print(device, " used for training")
 ##################################################################
 
 ### Settings changes here (Use argparse)
-opt = Options(dataset='BERTSeperateDataset', model="BERTSeperateModel", tag="Test")
-opt.finetune_bert_last_layer = False
+import argparse
+parser = argparse.ArgumentParser(description="Train a machine learning model")
 
+parser.add_argument("--dataset", type=str, default="LSTMDataset",  choices=["LSTMDataset", "BERTCombinedDataset", "BERTSeperateDataset"])
+parser.add_argument("--model", type=str, default="LSTM", choices=["LSTM", "BERTCombinedModel", "BERTSeperateModel"])
+parser.add_argument("--finetune_bert_last_layer", default=False, action='store_true')
 
+parser.add_argument("--epochs", type=int, default=100, help="Number of training epochs")
+parser.add_argument("--learning_rate", type=float, default=1e-4, help="Learning rate for the optimizer")
 
+args = parser.parse_args()
 
 ### Name and create model folder (Replace opt. with args. once argparse is implemented)
+opt = Options(dataset=args.dataset, model=args.model, tag="Test")
 if opt.model == 'LSTM':
     opt.model_folder = f"models/{opt.model}" + f"_{opt.tag}"
 opt.model_folder = f"models/{opt.model}" + f"_{opt.tag}" + f"{'_finetune' if opt.finetune_bert_last_layer else ''}"
 os.makedirs(opt.model_folder, exist_ok=True)
 
 ### Update opt with changes, Initialize directories and save options
+opt = Options(dataset=args.dataset, model=args.model, tag="Test")
+opt.__dict__.update(args.__dict__)
 opt.data_folder = f"data/{opt.train_size}_{opt.test_size}"
 os.makedirs(opt.data_folder, exist_ok=True)
-for item in opt.__dict__.items():
-    print(item)
+for k,v in opt.__dict__.items():
+    print(f"{k}: {v}")
+
 opt.save_options(opt.model_folder)
 
 ### 🔐Load train.csv and test.csv
