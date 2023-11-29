@@ -19,7 +19,7 @@ from utils import *
 import os
 from tqdm import tqdm
 
-device = 'cuda:2' if torch.cuda.is_available() else 'cpu'
+device = 'cuda:1' if torch.cuda.is_available() else 'cpu'
 print(device, " used for training")
 
 ##################################################################

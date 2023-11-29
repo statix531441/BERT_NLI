@@ -63,7 +63,7 @@ def clean_text(text):
 
 
 def fit(model, train_loader, lossFn, optimizer):  
-    device = 'cuda:2' if next(model.parameters()).is_cuda else 'cpu'
+    device = 'cuda:1' if next(model.parameters()).is_cuda else 'cpu'
     train_loss = 0
     train_accuracy = 0
 
@@ -82,7 +82,7 @@ def fit(model, train_loader, lossFn, optimizer):
     return train_loss, train_accuracy
 
 def predict(model, test_loader):
-    device = 'cuda:2' if next(model.parameters()).is_cuda else 'cpu'
+    device = 'cuda:1' if next(model.parameters()).is_cuda else 'cpu'
     y_test = []
     y_pred = []
     test_accuracy = 0
