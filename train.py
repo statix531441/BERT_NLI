@@ -93,7 +93,8 @@ test_loader = DataLoader(test_set, shuffle=True, batch_size=opt.batch_size)
 model = Models[opt.model](opt).to(device)
 
 ### 🧡Tuning Model Parameters
-if opt.model in ('BERTCombinedModel', 'BERTSeperateModel', 'RobertaCombinedDataset'):
+if opt.model in ('BERTCombinedModel', 'BERTSeperateModel', 'RobertaCombinedModel'):
+    print("Freezing bert")
     for param in model.bert.parameters():
         param.requires_grad = False
 
