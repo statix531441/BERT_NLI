@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from torch.functional import F
+from transformers import RobertaModel
     
 class BERTCombinedModel(nn.Module):
     def __init__(self, opt):
@@ -36,6 +37,22 @@ class BERTSeperateModel(nn.Module):
         out = self.linear(out)
         return out
     
+class RobertaCombinedModel(nn.Module):
+    def __init__(self, opt):
+        super().__init__()
+        self.bert = RobertaModel.from_pretrained('roberta-base')
+        self.linear = nn.Linear(768, 3)
+
+    def forward(self, X):
+        input_ids, attention_mask = X
+
+        # CLS representation of both sentences combined
+        out = self.bert(input_ids, attention_mask=attention_mask)
+        out = out[1]
+
+        out = self.linear(out)
+        return out
+    
 class LSTM(nn.Module):
     def __init__(self, opt):
         super().__init__()
@@ -56,6 +73,7 @@ Models = {
     'LSTM': LSTM,
     'BERTCombinedModel': BERTCombinedModel,
     'BERTSeperateModel': BERTSeperateModel,
+    'RobertaCombinedModel': RobertaCombinedModel,
 }
 
 if __name__ == "__main__":
@@ -66,10 +84,7 @@ if __name__ == "__main__":
     import pandas as pd
     from options import Options
 
-    opt = Options(dataset='LSTMDataset', model="LSTM", tag="Test")
-    opt.model = 'LSTM'
-    opt.dataset = 'LSTMDataset'
-    opt.data_folder = 'data/LSTM_TEST'
+    opt = Options(dataset='RobertaCombinedDataset', model="RobertaCombinedModel", tag="Test")
 
     df = pd.read_json('original/snli_1.0_train.jsonl', lines=True)
     df = df.sample(10).reset_index(drop=True)

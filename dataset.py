@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from utils import *
+from transformers import RobertaTokenizer
 
 class LSTMDataset(Dataset):
     def __init__(self, df, opt):
@@ -60,6 +61,29 @@ class BERTCombinedDataset(Dataset):
 
         return [input_ids, token_type_ids, attention_mask], y
     
+class RobertaCombinedDataset(Dataset):
+    def __init__(self, df, opt):
+        tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+        sentence1 = df['sentence1'].tolist()
+        sentence2 = df['sentence2'].tolist()
+        info = tokenizer(sentence1, sentence2, padding='max_length', max_length=200, return_tensors='pt')
+
+        self.input_ids = info['input_ids']
+        self.attention_mask = info['attention_mask']
+        
+        self.y = torch.tensor(df['gold_label'].apply(lambda label: le(label)))
+
+    def __len__(self):
+        return len(self.y)
+    
+    def __getitem__(self, idx):
+
+        input_ids = self.input_ids[idx]
+        attention_mask = self.attention_mask[idx]
+        y = self.y[idx]
+
+        return [input_ids, attention_mask], y
+    
 class BERTSeperateDataset(Dataset):
     def __init__(self, df, opt):
         tokenizer = torch.hub.load('huggingface/pytorch-transformers', 'tokenizer', 'bert-base-uncased')
@@ -99,9 +123,10 @@ class BERTSeperateDataset(Dataset):
 
     
 Datasets = {
+    'LSTMDataset': LSTMDataset,
     'BERTCombinedDataset': BERTCombinedDataset,
     'BERTSeperateDataset': BERTSeperateDataset,
-    'LSTMDataset': LSTMDataset,
+    'RobertaCombinedDataset': RobertaCombinedDataset,
 }
 
 if __name__ == "__main__":
@@ -109,9 +134,8 @@ if __name__ == "__main__":
     import pandas as pd
     from options import Options
 
-    opt = Options(dataset='LSTMDataset', model="LSTM", tag="Test")
-    opt.dataset = 'LSTMDataset'
-    opt.data_folder = 'data/LSTM_TEST'
+    opt = Options(dataset='RobertaCombinedDataset', model="", tag="Test")
+    opt.data_folder = 'data/RobertaCombinedDatasetTEST'
     os.makedirs(opt.data_folder, exist_ok=True)
 
     train_df = pd.read_json('original/snli_1.0_train.jsonl', lines=True)
@@ -123,7 +147,7 @@ if __name__ == "__main__":
         try:
             vocab = load_vocab(opt)
         except:
-            print("Couldn't load vocab")
+            print("Creating vocab")
             # Create vocabulary only from train_df
             vocab = create_vocab(train_df, opt)
             vocab_size = len(vocab)

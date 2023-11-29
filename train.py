@@ -28,8 +28,10 @@ print(device, " used for training")
 import argparse
 parser = argparse.ArgumentParser(description="Train a machine learning model")
 
-parser.add_argument("--dataset", type=str, default="BERTCombinedDataset",  choices=["LSTMDataset", "BERTCombinedDataset", "BERTSeperateDataset"])
-parser.add_argument("--model", type=str, default="BERTCombinedModel", choices=["LSTM", "BERTCombinedModel", "BERTSeperateModel"])
+parser.add_argument("--dataset", type=str, default="BERTCombinedDataset",  choices=["LSTMDataset", "BERTCombinedDataset", "BERTSeperateDataset", "RobertaCombinedDataset"])
+parser.add_argument("--model", type=str, default="BERTCombinedModel", choices=["LSTM", "BERTCombinedModel", "BERTSeperateModel", "RobertaCombinedModel"])
+parser.add_argument("--tag", type=str, default="")
+
 parser.add_argument("--finetune_bert_last_layer", default=False, action='store_true')
 
 parser.add_argument("--train_size", type=int, default=25000, help="Number of training epochs")
@@ -49,7 +51,6 @@ opt.model_folder = f"models/{opt.model}" + f"{opt.tag}" + f"{'_finetune' if opt.
 os.makedirs(opt.model_folder, exist_ok=True)
 
 ### Update opt with changes, Initialize directories and save options
-opt = Options(dataset=args.dataset, model=args.model, tag="Test")
 opt.__dict__.update(args.__dict__)
 opt.data_folder = f"data/{opt.train_size}_{opt.test_size}"
 os.makedirs(opt.data_folder, exist_ok=True)
@@ -113,7 +114,7 @@ else:
     optimizer = torch.optim.Adam(
         [
             {'params': model.linear.parameters()},
-            {'params': model.bert.pooler.parameters(), 'lr': 1e-3}
+            {'params': model.bert.pooler.parameters(), 'lr': 1e-5}
         ], lr=opt.lr
     )
 history = {
