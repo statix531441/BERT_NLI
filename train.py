@@ -93,7 +93,7 @@ test_loader = DataLoader(test_set, shuffle=True, batch_size=opt.batch_size)
 model = Models[opt.model](opt).to(device)
 
 ### 🧡Tuning Model Parameters
-if opt.model in ('BERTCombinedModel', 'BERTSeperateModel'):
+if opt.model in ('BERTCombinedModel', 'BERTSeperateModel', 'RobertaCombinedDataset'):
     for param in model.bert.parameters():
         param.requires_grad = False
 
@@ -106,6 +106,7 @@ lossFn = nn.CrossEntropyLoss().to(device)
 
 
 if opt.model=='LSTM':
+    print("LSTM optimizer chosen")
     optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr)
 
 else:
